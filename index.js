@@ -11,7 +11,7 @@ let salas = {
     "administrator": { players: 1, modifiers: [], data: [] }
 };
 
-app.listen(8080, () => {
+app.listen(process.env.PORT | 3000, () => {
     console.log("Servidor rodando na porta 8080");
 });
 
