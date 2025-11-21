@@ -1,0 +1,24 @@
+{
+    "normalVelocity": 10,
+    "MaxVelocity": 10.4,
+
+    "name": "MongoAnticheat",
+
+    "Flytime": 3,
+    "MaxEnerny": 50,
+    "MaxMana": 100,
+    "MinMana": 0,
+    "MaxHealth": 100,
+    "MinHealth": 0,
+
+    "MinAttackDamage": 0,
+    "MaxAttackdamage": 2,
+
+    "Mods": [
+        "FlyMod",
+        "SpeedMod",
+        "JumpMode",
+        "UpdatesMod",
+        "OmboAnticheatMod"
+    ]
+}
