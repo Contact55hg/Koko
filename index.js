@@ -6,6 +6,7 @@ const stealth = require('puppeteer-extra-plugin-stealth');
 const fs = require("fs");
 
 const banJsonFile = require("./Banned.json");
+const salasjsonFile = require("./salas.json");
 
 const key = "@Bearer/KeyPass*AuthorizationConfidencionale;;;;Protected@KeystoreType=ProtectionASS@233988NSM"
 
@@ -30,13 +31,10 @@ const bannedUsers = {
 
 app.use(express.json());
 
-let salas = {
-    "sala_7768485": {
-        players: 0,
-        modifiers: [],
-        data: {}
-    }
-};
+
+
+salas = salasjsonFile;
+
 
 app.listen(process.env.PORT | 3000, () => {
     console.log("Servidor rodando na porta " + process.env.PORT | 3000);
