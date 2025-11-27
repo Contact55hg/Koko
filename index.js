@@ -1,18 +1,41 @@
 const express = require("express");
 const app = express();
+const stealth = require('puppeteer-extra-plugin-stealth');
+
+
+const fs = require("fs");
+
+const banJsonFile = require("./Banned.json");
 
 const key = "@Bearer/KeyPass*AuthorizationConfidencionale;;;;Protected@KeystoreType=ProtectionASS@233988NSM"
 
 const mongoAnticheat = require("./anticheat.json");
 
+
+
+
+
+
+
+
+
+
 const banTimesDays = [
     4, 8, 23, 1, 80, 9, 10, 33, 59, 300, 23, 23, 23, 23, 10, 2, 4, 5, 6, 7, 99, 100
 ];
 
+const bannedUsers = {
+    
+}
+
 app.use(express.json());
 
 let salas = {
-    "administrator": { players: 1, modifiers: [], data: [] }
+    "sala_7768485": {
+        players: 0,
+        modifiers: [],
+        data: {}
+    }
 };
 
 app.listen(process.env.PORT | 3000, () => {
@@ -21,23 +44,10 @@ app.listen(process.env.PORT | 3000, () => {
 
 // ban user
 
-app.get("/Ban/:id", (req, res) => {
-    var Authorization = req.get("Authorization");
 
-    if (Authorization == key){
-       var json = string(req.params.id);
-
-       var format = JSON.parse(json);
-
-       console.log(format.uid);
-    }else {
-        res.send("Acesso negado");
-        console.log(format.uid);
-    }
-})
 
 // Criar sala
-app.get("/world/create/:id", (req, res) => {
+app.get("/create/:id", (req, res) => {
     var id = req.params.id;
 
     var keyaccess = req.get("Authorization");
@@ -57,7 +67,7 @@ app.get("/world/create/:id", (req, res) => {
     salas[id] = {
         players: 0,
         modifiers: [],
-        data: []
+        data: {}
     };
 
     res.send({ ok: true, salaCriada: id, erro: null });
@@ -65,9 +75,66 @@ app.get("/world/create/:id", (req, res) => {
 }
 });
 
+app.get("/BanCheck", (req, res) => {
+    res.send(banJsonFile);
+})
+
+process.stdin.resume();
+
+process.on("SIGINT", (code) => {
+    fs.writeFileSync("Banned.json", JSON.stringify(bannedUsers, null, 2));
+    fs.writeFileSync("salas.json", JSON.stringify(salas, null, 2));
+    process.exit();
+})
+
+app.get("/Punish/", (req, res) => {
+    var Authorization = req.get("Authorization");
+
+    var json = req.query.data;
+
+       var format = JSON.parse(decodeURIComponent(json));
+
+       Authorization = key;
+
+    if (Authorization == key){
+       
+
+       bannedUsers[format.uid] = {
+        "UID": format.uid,
+        "TIME": banTimesDays[Math.floor(Math.random() * banTimesDays.length)],
+        "REASON": format.reason,
+        "MODERATOR": format.moderator
+       };
+
+       fs.writeFileSync("Banned.json", JSON.stringify(bannedUsers, null, 4))
+
+       res.send("Success");
+    }else {
+        res.send("Acesso negado");
+    }
+})
+
 app.get("/sala", (req, res) => {
     let keys = Object.keys(salas)
-    res.send(keys[Math.floor(Math.random() * Object.keys(salas).length)])
+    var choosedRoom = keys[Math.floor(Math.random() * Object.keys(salas).length)]
+    if (choosedRoom != undefined)
+    res.send(choosedRoom)
+       else {
+        res.send("Nenhuma sala encontrada");
+       }
+})
+
+app.get("/Join/:id", (req, res) => {
+    var rromID = req.params.id;
+    if (Object.keys(salas).includes(rromID)){
+        res.send({
+            status: "OK"
+        });
+    }else {
+        res.send({
+            status: "FAIL"
+        });
+    }
 })
 
 // Listar salas

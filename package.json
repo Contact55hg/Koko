@@ -11,6 +11,12 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "playwright": "^1.56.1",
+    "puppeteer": "^24.31.0",
+    "puppeteer-core": "^24.31.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "selenium-webdriver": "^4.38.0"
   }
 }
